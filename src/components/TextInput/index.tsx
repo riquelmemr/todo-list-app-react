@@ -1,5 +1,5 @@
 import { Email, Lock } from '@mui/icons-material';
-import { Box, InputAdornment, TextField } from '@mui/material';
+import { Box, Grid, InputAdornment, TextField } from '@mui/material';
 import React from 'react';
 
 interface TextInputProps {
@@ -7,6 +7,8 @@ interface TextInputProps {
 	type: string;
 	label: string;
 	placeholder: string;
+	state: string;
+	setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -14,9 +16,11 @@ const TextInput: React.FC<TextInputProps> = ({
 	type,
 	label,
 	placeholder,
+	state,
+	setState,
 }) => {
 	return (
-		<React.Fragment>
+		<Grid item width={'100%'}>
 			<Box component={'label'} htmlFor={name} sx={{ fontWeight: '500' }}>
 				{label}
 			</Box>
@@ -25,6 +29,7 @@ const TextInput: React.FC<TextInputProps> = ({
 				name={name}
 				variant="standard"
 				placeholder={placeholder}
+				onChange={(e) => setState(e.target.value)}
 				InputProps={{
 					disableUnderline: true,
 					startAdornment: (
@@ -59,7 +64,7 @@ const TextInput: React.FC<TextInputProps> = ({
 				}}
 				fullWidth
 			/>
-		</React.Fragment>
+		</Grid>
 	);
 };
 

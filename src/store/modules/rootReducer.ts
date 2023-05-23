@@ -1,11 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import postsSlice from './posts/postsSlice';
 import userLoggedSlice from './userLogged/userLoggedSlice';
+import usersSlice from './users/usersSlice';
 
 const rootReducer = combineReducers({
 	userLogged: userLoggedSlice,
-	posts: postsSlice,
+	users: usersSlice,
 });
 
 export default rootReducer;
