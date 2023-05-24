@@ -8,6 +8,8 @@ interface TextInputProps {
 	label: string;
 	placeholder: string;
 	state: string;
+	helperText?: string;
+	error?: boolean;
 	setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -16,6 +18,8 @@ const TextInput: React.FC<TextInputProps> = ({
 	type,
 	label,
 	placeholder,
+	helperText,
+	error,
 	state,
 	setState,
 }) => {
@@ -25,10 +29,13 @@ const TextInput: React.FC<TextInputProps> = ({
 				{label}
 			</Box>
 			<TextField
+				error={error}
+				helperText={helperText}
 				type={type}
 				name={name}
 				variant="standard"
 				placeholder={placeholder}
+				value={state}
 				onChange={(e) => setState(e.target.value)}
 				InputProps={{
 					disableUnderline: true,

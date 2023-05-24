@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import Form from '../../components/Form';
+import FormRegister from '../../components/FormRegister';
 
 const Register = () => {
 	return (
@@ -15,7 +15,7 @@ const Register = () => {
 				backgroundColor: 'secondary.100',
 			}}
 		>
-			<Form context="register" />
+			<FormRegister />
 		</Box>
 	);
 };

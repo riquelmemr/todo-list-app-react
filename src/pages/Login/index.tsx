@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import Form from '../../components/Form';
+import FormLogin from '../../components/FormLogin';
 
 const Login = () => {
 	return (
@@ -15,7 +15,7 @@ const Login = () => {
 				backgroundColor: 'secondary.100',
 			}}
 		>
-			<Form context="login" />
+			<FormLogin />
 		</Box>
 	);
 };
