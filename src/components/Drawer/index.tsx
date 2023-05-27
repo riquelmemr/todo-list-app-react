@@ -1,12 +1,12 @@
 import {
-  CheckCircle,
-  ChevronLeft,
-  ChevronRight,
-  Delete,
-  ExitToApp,
-  Home,
-  Inbox,
-  Menu,
+	CheckCircle,
+	ChevronLeft,
+	ChevronRight,
+	Delete,
+	ExitToApp,
+	Home,
+	Inbox,
+	Menu,
 } from '@mui/icons-material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';

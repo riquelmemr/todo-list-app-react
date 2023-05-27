@@ -12,7 +12,7 @@ const Register = () => {
 				justifyContent: 'center',
 				alignItems: 'center',
 				padding: '10px',
-				backgroundColor: 'secondary.100',
+				backgroundColor: 'secondary.light',
 			}}
 		>
 			<FormRegister />

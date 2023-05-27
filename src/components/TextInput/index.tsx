@@ -63,7 +63,7 @@ const TextInput: React.FC<TextInputProps> = ({
 					},
 				}}
 				sx={{
-					backgroundColor: 'secondary.100',
+					backgroundColor: 'secondary.light',
 					borderRadius: '8px',
 					border: 'none',
 					padding: '8px 14px',
