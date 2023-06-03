@@ -5,7 +5,6 @@ import {
 	Delete,
 	ExitToApp,
 	Home,
-	Inbox,
 	Menu,
 } from '@mui/icons-material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -106,11 +105,6 @@ const navItems = [
 		text: 'Página Inicial',
 		href: '/',
 		icon: <Home sx={{ color: '#fff' }} />,
-	},
-	{
-		text: 'Minhas Tarefas',
-		href: '/tasks',
-		icon: <Inbox sx={{ color: '#fff' }} />,
 	},
 	{
 		text: 'Concluídas',

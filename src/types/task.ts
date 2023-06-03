@@ -5,7 +5,7 @@ interface Task {
 	completed: boolean;
 	createdAt: string;
 	createdBy: string;
-	deletedAt?: Date;
+	isDeleted: boolean;
 }
 
 export default Task;

@@ -8,9 +8,9 @@ import { createUser, findAllUsers } from '../../store/modules/users/usersSlice';
 import LoginError from '../../types/error';
 import { User } from '../../types/user';
 import {
-  emailValidator,
-  loginValidator,
-  passwordValidator,
+	emailValidator,
+	loginValidator,
+	passwordValidator,
 } from '../../utils/validators/inputs';
 import FormButton from '../FormButton';
 import Logo from '../Logo';
@@ -105,8 +105,9 @@ const FormRegister: React.FC = () => {
 				>
 					<Logo />
 					<Typography
-						variant={'body1'}
+						variant={'body2'}
 						color={'#aaa'}
+						textAlign={'center'}
 						sx={{
 							marginBottom: '12px',
 						}}
