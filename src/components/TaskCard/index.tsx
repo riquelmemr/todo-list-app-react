@@ -9,19 +9,42 @@ import Typography from '@mui/material/Typography';
 import React from 'react';
 
 import { theme } from '../../configs/themes';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { findAllTasks, updateTask } from '../../store/modules/tasks/tasksSlice';
 import Task from '../../types/task';
+import Modal from '../Modal';
 
 interface TaskCardProps {
 	task: Task;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+	const [open, setOpen] = React.useState(false);
+	const [isUpdate, setIsUpdate] = React.useState(false);
+	const [isDelete, setIsDelete] = React.useState(false);
+
+	const dispath = useAppDispatch();
+	const tasks = useAppSelector(findAllTasks);
+
+	const handleFavorite = () => {
+		dispath(
+			updateTask({
+				id: task.id,
+				changes: {
+					completed: !task.completed,
+				},
+			}),
+		);
+	};
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Card
 				sx={{
 					width: '100%',
-					backgroundColor: theme.palette.secondary.main,
+					backgroundColor: task.completed
+						? '#003e5f'
+						: theme.palette.secondary.main,
 					color: theme.palette.secondary.contrastText,
 					borderRadius: '8px',
 				}}
@@ -52,15 +75,29 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 					}}
 				>
 					<Box sx={{ display: 'flex', gap: 1 }}>
-						<Button size="small" variant="contained">
+						<Button
+							size="small"
+							variant="contained"
+							onClick={() => {
+								setIsUpdate(true);
+								setOpen(true);
+							}}
+						>
 							Editar
 						</Button>
-						<Button size="small" variant="contained">
+						<Button
+							size="small"
+							variant="contained"
+							onClick={() => {
+								setOpen(true);
+								setIsDelete(true);
+							}}
+						>
 							Excluir
 						</Button>
 					</Box>
 
-					<IconButton color="primary">
+					<IconButton color="primary" onClick={handleFavorite}>
 						{task.completed ? (
 							<CheckCircle />
 						) : (
@@ -69,6 +106,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 					</IconButton>
 				</CardActions>
 			</Card>
+
+			<Modal
+				task={task}
+				context={isDelete ? 'delete' : 'update'}
+				open={open}
+				setOpen={setOpen}
+			/>
 		</ThemeProvider>
 	);
 };
