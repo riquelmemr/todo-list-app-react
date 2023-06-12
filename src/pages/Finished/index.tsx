@@ -6,10 +6,12 @@ import MiniDrawer from '../../components/Drawer';
 import TaskCard from '../../components/TaskCard';
 import { useAppSelector } from '../../store/hooks';
 import { findAllTasks } from '../../store/modules/tasks/tasksSlice';
+import { selectUserLogged } from '../../store/modules/userLogged/userLoggedSlice';
 
 const Finished = () => {
 	const navigate = useNavigate();
 	const tasks = useAppSelector(findAllTasks);
+	const userLogged = useAppSelector(selectUserLogged).email;
 
 	useEffect(() => {
 		if (!sessionStorage.getItem('userLogged')) {
@@ -19,12 +21,12 @@ const Finished = () => {
 
 	return (
 		<div>
-			<MiniDrawer titlePage="Tarefas">
+			<MiniDrawer titlePage="Concluídas">
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
 						<Typography
-							variant="h5"
-							color={'#fff'}
+							variant="h6"
+							color={'#e9e9e9'}
 							fontWeight={'500'}
 						>
 							Visualize aqui suas tarefas concluídas:
@@ -35,8 +37,7 @@ const Finished = () => {
 							return (
 								!task.isDeleted &&
 								task.completed &&
-								task.createdBy ===
-									sessionStorage.getItem('userLogged')
+								task.createdBy === userLogged
 							);
 						})
 						.map((task) => (

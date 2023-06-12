@@ -39,21 +39,23 @@ export const passwordValidator = (
 	};
 };
 
-export const loginValidator = (email: string, password: string) => {
+export const loginValidator = (email: string, password: string): LoginError => {
 	if (!email || !password) {
-		console.log('Email ou senha inválidos');
-		return false;
-	}
-
-	if (!emailRegex.test(email)) {
-		console.log('Email inválido');
-		return false;
+		return {
+			helperText: 'Email ou senha inválidos.',
+			valid: false,
+		};
 	}
 
 	if (password.length < 6) {
-		console.log('Senha inválida');
-		return false;
+		return {
+			helperText: 'Utilize 6 ou mais caracteres em sua senha.',
+			valid: false,
+		};
 	}
 
-	return true;
+	return {
+		helperText: '',
+		valid: true,
+	};
 };

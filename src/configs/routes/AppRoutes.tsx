@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Deleted from '../../pages/Deleted';
-import Finished from '../../pages/Finished/indes';
+import Finished from '../../pages/Finished';
 import Home from '../../pages/Home';
 import Login from '../../pages/Login';
 import Register from '../../pages/Register';

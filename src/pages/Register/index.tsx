@@ -1,8 +1,15 @@
 import { Box } from '@mui/material';
+import { useEffect } from 'react';
 
 import FormRegister from '../../components/FormRegister';
 
 const Register = () => {
+	useEffect(() => {
+		if (sessionStorage.getItem('userLogged')) {
+			window.location.href = '/';
+		}
+	}, []);
+
 	return (
 		<Box
 			component={'main'}

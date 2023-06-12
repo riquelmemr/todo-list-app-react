@@ -1,4 +1,4 @@
-import { Box, Grid, Link, Typography } from '@mui/material';
+import { Grid, Link, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -13,13 +13,17 @@ import {
 	passwordValidator,
 } from '../../utils/validators/inputs';
 import FormButton from '../FormButton';
+import LoginContainer from '../LoginContainer';
 import Logo from '../Logo';
+import SnackBarMessage from '../SnackBarMessage';
 import TextInput from '../TextInput';
 
 const FormRegister: React.FC = () => {
 	const [email, setEmail] = React.useState('');
 	const [password, setPassword] = React.useState('');
 	const [confirmPassword, setConfirmPassword] = React.useState('');
+	const [open, setOpen] = React.useState(false);
+	const [message, setMessage] = React.useState('');
 
 	const [emailError, setEmailError] = React.useState<LoginError>({
 		helperText: '',
@@ -53,13 +57,13 @@ const FormRegister: React.FC = () => {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const valid = loginValidator(email, password);
+		const { valid, helperText } = loginValidator(email, password);
 
 		if (valid) {
 			user = users.find((user) => user.email === email);
 
 			if (user) {
-				alert('Usuário já cadastrado!');
+				setMessage('Usuário já cadastrado! Utilize outro email.');
 				return;
 			}
 
@@ -73,101 +77,92 @@ const FormRegister: React.FC = () => {
 			);
 
 			navigate('/login');
+		} else {
+			setMessage(helperText);
 		}
 	};
 
 	return (
-		<Box
-			component={'form'}
-			action="submit"
-			onSubmit={handleSubmit}
-			sx={{
-				backgroundColor: 'secondary.main',
-				borderRadius: '10px',
-				width: { xs: '100%', md: '50%' },
-				color: 'secondary.contrastText',
-			}}
-		>
+		<LoginContainer handleSubmit={handleSubmit}>
 			<Grid
-				container
+				item
+				display={'flex'}
 				flexDirection={'column'}
 				justifyContent={'center'}
 				alignItems={'center'}
-				rowSpacing={2}
-				padding={5}
 			>
-				<Grid
-					item
-					display={'flex'}
-					flexDirection={'column'}
-					justifyContent={'center'}
-					alignItems={'center'}
+				<Logo />
+				<Typography
+					variant={'body2'}
+					color={'#aaa'}
+					textAlign={'center'}
+					sx={{
+						marginBottom: '12px',
+					}}
 				>
-					<Logo />
-					<Typography
-						variant={'body2'}
-						color={'#aaa'}
-						textAlign={'center'}
-						sx={{
-							marginBottom: '12px',
-						}}
-					>
-						Crie sua conta e organize suas tarefas da melhor forma!
-					</Typography>
-				</Grid>
-				<Grid
-					item
-					display={'flex'}
-					flexDirection={'column'}
-					alignItems={'center'}
-				></Grid>
-				<TextInput
-					name="email"
-					label="Seu e-mail"
-					placeholder="john@example.com"
-					type="email"
-					setState={setEmail}
-					state={email}
-					error={!emailError.valid}
-					helperText={emailError.helperText}
-				/>
-
-				<TextInput
-					name="password"
-					label="Sua senha"
-					placeholder="**********"
-					type="password"
-					setState={setPassword}
-					state={password}
-					error={!passwordError.valid}
-					helperText={passwordError.helperText}
-				/>
-				<TextInput
-					name="confirmPassword"
-					label="Confirme sua senha"
-					placeholder="**********"
-					type="password"
-					setState={setConfirmPassword}
-					state={confirmPassword}
-					error={!confirmPasswordError.valid}
-					helperText={confirmPasswordError.helperText}
-				/>
-				<Grid
-					item
-					width={'100%'}
-					display={'flex'}
-					justifyContent={'center'}
-					marginBottom={'18px'}
-				>
-					<Link href={'/login'} sx={{ fontSize: '14px' }}>
-						Voltar para a página de login.
-					</Link>
-				</Grid>
-				<Grid item width={'100%'}>
-					<FormButton context={'login'} />
-				</Grid>
+					Crie sua conta e organize suas tarefas da melhor forma!
+				</Typography>
 			</Grid>
-		</Box>
+			<SnackBarMessage
+				open={open}
+				handleClose={() => setOpen(false)}
+				mode={'error'}
+				message={message}
+			/>
+			<TextInput
+				name="email"
+				label="Seu e-mail"
+				placeholder="john@example.com"
+				type="email"
+				setState={setEmail}
+				state={email}
+				error={!emailError.valid}
+				helperText={emailError.helperText}
+			/>
+
+			<TextInput
+				name="password"
+				label="Sua senha"
+				placeholder="**********"
+				type="password"
+				setState={setPassword}
+				state={password}
+				error={!passwordError.valid}
+				helperText={passwordError.helperText}
+			/>
+			<TextInput
+				name="confirmPassword"
+				label="Confirme sua senha"
+				placeholder="**********"
+				type="password"
+				setState={setConfirmPassword}
+				state={confirmPassword}
+				error={!confirmPasswordError.valid}
+				helperText={confirmPasswordError.helperText}
+			/>
+			<Grid
+				item
+				width={'100%'}
+				display={'flex'}
+				justifyContent={'center'}
+				marginBottom={'18px'}
+			>
+				<Link href={'/login'} sx={{ fontSize: '14px' }}>
+					Voltar para a página de login.
+				</Link>
+			</Grid>
+			<Grid item width={'100%'}>
+				<FormButton
+					context={'register'}
+					setOpen={setOpen}
+					isDisabled={
+						!emailError.valid ||
+						!passwordError.valid ||
+						!confirmPasswordError.valid
+					}
+				/>
+			</Grid>
+		</LoginContainer>
 	);
 };
 

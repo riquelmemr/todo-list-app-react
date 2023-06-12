@@ -1,8 +1,15 @@
 import { Box } from '@mui/material';
+import { useEffect } from 'react';
 
 import FormLogin from '../../components/FormLogin';
 
 const Login = () => {
+	useEffect(() => {
+		if (sessionStorage.getItem('userLogged')) {
+			window.location.href = '/';
+		}
+	}, []);
+
 	return (
 		<Box
 			component="main"

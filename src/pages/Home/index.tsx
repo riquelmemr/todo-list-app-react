@@ -8,77 +8,13 @@ import Modal from '../../components/Modal';
 import TaskCard from '../../components/TaskCard';
 import { useAppSelector } from '../../store/hooks';
 import { findAllTasks } from '../../store/modules/tasks/tasksSlice';
-import Task from '../../types/task';
-
-const mockTasks: Task[] = [
-	{
-		id: '1',
-		title: 'Tarefa 1',
-		description: 'Descrição da tarefa',
-		createdAt: new Date().toLocaleDateString('pt-BR'),
-		createdBy: 'Usuário 1',
-		completed: false,
-		isDeleted: false,
-	},
-	{
-		id: '2',
-		title: 'Tarefa 2',
-		description: 'Descrição da tarefa',
-		createdAt: new Date().toLocaleDateString('pt-BR'),
-		createdBy: 'Usuário 2',
-		completed: false,
-		isDeleted: false,
-	},
-	{
-		id: '3',
-		title: 'Descrição da tarefa sadasdasdasd',
-		description: 'Descrição da tarefa grande',
-		createdAt: new Date().toLocaleDateString('pt-BR'),
-		createdBy: 'Usuário 3',
-		completed: true,
-		isDeleted: false,
-	},
-	{
-		id: '3',
-		title: 'Descrição da tarefa sadasdasdasd',
-		description: 'Descrição da tarefa grande',
-		createdAt: new Date().toLocaleDateString('pt-BR'),
-		createdBy: 'Usuário 3',
-		completed: true,
-		isDeleted: false,
-	},
-	{
-		id: '3',
-		title: 'Descrição da tarefa sadasdasdasd',
-		description: 'Descrição da tarefa grande',
-		createdAt: new Date().toLocaleDateString('pt-BR'),
-		createdBy: 'Usuário 3',
-		completed: true,
-		isDeleted: false,
-	},
-	{
-		id: '2',
-		title: 'Tarefa 2',
-		description: 'Descrição da tarefa',
-		createdAt: new Date().toLocaleDateString('pt-BR'),
-		createdBy: 'Usuário 2',
-		completed: false,
-		isDeleted: false,
-	},
-	{
-		id: '2',
-		title: 'Tarefa 2',
-		description: 'Descrição da tarefa',
-		createdAt: new Date().toLocaleDateString('pt-BR'),
-		createdBy: 'Usuário 2',
-		completed: false,
-		isDeleted: false,
-	},
-];
+import { selectUserLogged } from '../../store/modules/userLogged/userLoggedSlice';
 
 const Home = () => {
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
+
+	const userLogged = useAppSelector(selectUserLogged).email;
 
 	const tasks = useAppSelector(findAllTasks);
 
@@ -94,27 +30,24 @@ const Home = () => {
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
 						<Typography
-							variant="h5"
-							color={'#fff'}
+							variant="h6"
+							color={'#e9e9e9'}
 							fontWeight={'500'}
 						>
 							Crie e edite aqui suas tarefas:
 						</Typography>
 					</Grid>
-					{tasks.length > 0 ??
-						tasks
-							.filter((task) => {
-								return (
-									!task.isDeleted &&
-									task.createdBy ===
-										sessionStorage.getItem('userLogged')
-								);
-							})
-							.map((task) => (
-								<Grid item key={task.id} xs={12} sm={6} md={4}>
-									<TaskCard task={task} />
-								</Grid>
-							))}
+					{tasks
+						.filter((task) => {
+							return (
+								!task.isDeleted && task.createdBy === userLogged
+							);
+						})
+						.map((task) => (
+							<Grid item key={task.id} xs={12} sm={6} md={4}>
+								<TaskCard task={task} />
+							</Grid>
+						))}
 				</Grid>
 				<Fab
 					color="primary"

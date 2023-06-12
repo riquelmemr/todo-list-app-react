@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography';
 import React from 'react';
 
 import { theme } from '../../configs/themes';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { findAllTasks, updateTask } from '../../store/modules/tasks/tasksSlice';
+import { useAppDispatch } from '../../store/hooks';
+import { updateTask } from '../../store/modules/tasks/tasksSlice';
 import Task from '../../types/task';
 import Modal from '../Modal';
 
@@ -22,9 +22,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 	const [open, setOpen] = React.useState(false);
 	const [isUpdate, setIsUpdate] = React.useState(false);
 	const [isDelete, setIsDelete] = React.useState(false);
+	const [isRestore, setIsRestore] = React.useState(false);
 
 	const dispath = useAppDispatch();
-	const tasks = useAppSelector(findAllTasks);
 
 	const handleFavorite = () => {
 		dispath(
@@ -43,7 +43,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 				sx={{
 					width: '100%',
 					backgroundColor: task.completed
-						? '#003e5f'
+						? '#181818'
 						: theme.palette.secondary.main,
 					color: theme.palette.secondary.contrastText,
 					borderRadius: '8px',
@@ -58,9 +58,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 						<Typography gutterBottom variant="h6" component="h3">
 							{task.title}
 						</Typography>
-						<Typography variant="body2" component="div">
-							{task.createdAt}
-						</Typography>
 					</Box>
 
 					<Typography variant="body2" color={'#bbb'}>
@@ -74,42 +71,85 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 						padding: '16px',
 					}}
 				>
-					<Box sx={{ display: 'flex', gap: 1 }}>
-						<Button
-							size="small"
-							variant="contained"
-							onClick={() => {
-								setIsUpdate(true);
-								setOpen(true);
-							}}
-						>
-							Editar
-						</Button>
-						<Button
-							size="small"
-							variant="contained"
-							onClick={() => {
-								setOpen(true);
-								setIsDelete(true);
-							}}
-						>
-							Excluir
-						</Button>
-					</Box>
-
-					<IconButton color="primary" onClick={handleFavorite}>
-						{task.completed ? (
-							<CheckCircle />
-						) : (
-							<CheckCircleOutline />
-						)}
-					</IconButton>
+					{(task.isDeleted && (
+						<Box sx={{ display: 'flex', gap: 1 }}>
+							<Button
+								size="small"
+								variant="contained"
+								onClick={() => {
+									setIsRestore(true);
+									setIsDelete(false);
+									setIsUpdate(false);
+									setOpen(true);
+								}}
+							>
+								Restaurar
+							</Button>
+							<Button
+								size="small"
+								variant="contained"
+								sx={{
+									bgcolor: '#c93f3f',
+									'&:hover': { bgcolor: '#921212' },
+								}}
+								onClick={() => {
+									setOpen(true);
+									setIsDelete(true);
+									setIsRestore(false);
+									setIsUpdate(false);
+								}}
+							>
+								Excluir
+							</Button>
+						</Box>
+					)) || (
+						<Box sx={{ display: 'flex', gap: 1 }}>
+							<Button
+								size="small"
+								variant="contained"
+								onClick={() => {
+									setIsUpdate(true);
+									setIsDelete(false);
+									setIsRestore(false);
+									setOpen(true);
+								}}
+							>
+								Editar
+							</Button>
+							<Button
+								size="small"
+								variant="contained"
+								sx={{
+									bgcolor: '#c93f3f',
+									'&:hover': { bgcolor: '#921212' },
+								}}
+								onClick={() => {
+									setOpen(true);
+									setIsDelete(true);
+								}}
+							>
+								Excluir
+							</Button>
+						</Box>
+					)}
+					<Typography variant="body2" component="div">
+						{task.createdAt}
+					</Typography>
+					{!task.isDeleted && (
+						<IconButton color="primary" onClick={handleFavorite}>
+							{task.completed ? (
+								<CheckCircle />
+							) : (
+								<CheckCircleOutline />
+							)}
+						</IconButton>
+					)}
 				</CardActions>
 			</Card>
 
 			<Modal
 				task={task}
-				context={isDelete ? 'delete' : 'update'}
+				context={isDelete ? 'delete' : isUpdate ? 'update' : 'restore'}
 				open={open}
 				setOpen={setOpen}
 			/>

@@ -10,26 +10,28 @@ import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { theme } from '../../configs/themes';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
 	addTask,
 	removeTask,
 	updateTask,
 } from '../../store/modules/tasks/tasksSlice';
+import { selectUserLogged } from '../../store/modules/userLogged/userLoggedSlice';
 import Task from '../../types/task';
 
 interface ModalProps {
 	task?: Task;
-	context: 'create' | 'update' | 'delete';
+	context: 'create' | 'update' | 'delete' | 'restore';
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
+	const [title, setTitle] = useState(task?.title || '');
+	const [description, setDescription] = useState(task?.description || '');
 
 	const dispatch = useAppDispatch();
+	const userLogged = useAppSelector(selectUserLogged).email;
 
 	const handleSubmit = () => {
 		setOpen(false);
@@ -43,9 +45,7 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 						description,
 						completed: false,
 						createdAt: new Date().toLocaleDateString('pt-BR'),
-						createdBy:
-							sessionStorage.getItem('userLogged') ||
-							'Usuário não enocontado na sessão',
+						createdBy: userLogged,
 						isDeleted: false,
 					}),
 				);
@@ -79,6 +79,20 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 						}),
 					);
 				}
+
+				break;
+
+			case 'restore':
+				if (task) {
+					dispatch(
+						updateTask({
+							id: task.id,
+							changes: {
+								isDeleted: false,
+							},
+						}),
+					);
+				}
 		}
 	};
 
@@ -96,15 +110,17 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 					},
 				}}
 			>
-				<DialogTitle id="alert-dialog-title" color={'primary'}>
+				<DialogTitle id="alert-dialog-title" color={'#fff'}>
 					{context === 'create'
 						? 'Crie sua tarefa'
 						: context === 'update'
 						? 'Edite sua tarefa'
-						: 'Tem certeza que deseja excluir esta tarefa?'}
+						: context === 'delete'
+						? 'Deseja excluir essa tarefa?'
+						: 'Deseja restaurar essa tarefa?'}
 				</DialogTitle>
 
-				{context !== 'delete' && (
+				{context !== 'delete' && context !== 'restore' && (
 					<DialogContent>
 						<Grid container spacing={2}>
 							<Grid item xs={12}>
@@ -120,6 +136,8 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 								</Box>
 								<TextField
 									fullWidth
+									variant="standard"
+									value={title}
 									onChange={(e) => setTitle(e.target.value)}
 									InputProps={{
 										disableUnderline: true,
@@ -129,6 +147,7 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 										},
 									}}
 									sx={{
+										padding: '12px',
 										borderRadius: '6px',
 										backgroundColor: '#43474a',
 										border: 'none',
@@ -148,6 +167,8 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 								</Box>
 								<TextField
 									fullWidth
+									variant="standard"
+									value={description}
 									onChange={(e) =>
 										setDescription(e.target.value)
 									}
@@ -159,6 +180,7 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 										},
 									}}
 									sx={{
+										padding: '12px',
 										border: 'none',
 										borderRadius: '6px',
 										backgroundColor: '#43474a',

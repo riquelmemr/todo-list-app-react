@@ -1,4 +1,4 @@
-import { Box, Grid, Link, Typography } from '@mui/material';
+import { Grid, Link, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,16 +9,17 @@ import LoginError from '../../types/error';
 import { User } from '../../types/user';
 import { emailValidator, loginValidator } from '../../utils/validators/inputs';
 import FormButton from '../FormButton';
+import LoginContainer from '../LoginContainer';
 import Logo from '../Logo';
+import SnackBarMessage from '../SnackBarMessage';
 import TextInput from '../TextInput';
 
 const FormLogin: React.FC = () => {
 	const [email, setEmail] = React.useState('');
 	const [password, setPassword] = React.useState('');
-	const [error, setError] = React.useState<LoginError>({
-		helperText: '',
-		valid: false,
-	});
+	const [open, setOpen] = React.useState(false);
+	const [message, setMessage] = React.useState('');
+	const [error, setError] = React.useState<LoginError>({} as LoginError);
 
 	const users = useAppSelector(findAllUsers);
 	const dispatch = useAppDispatch();
@@ -35,105 +36,101 @@ const FormLogin: React.FC = () => {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const valid = loginValidator(email, password);
+		const { valid, helperText } = loginValidator(email, password);
+		console.log(valid, helperText);
 		let user: User | undefined;
 
 		if (valid) {
 			user = users.find((user) => user.email === email);
 
 			if (!user) {
-				alert('Usuário não encontrado');
+				setMessage('Usuário não encontrado! Crie uma conta.');
+				console.log(message);
 				return;
 			}
 
 			if (user.password !== password) {
-				alert('Senha incorreta');
+				setMessage('Senha incorreta. Tente novamente!');
+				console.log(message);
 				return;
 			}
 
 			dispatch(setUserLogged(user));
 			navigate('/');
+		} else {
+			setMessage(helperText);
 		}
 	};
 
 	return (
-		<Box
-			component={'form'}
-			action="submit"
-			onSubmit={handleSubmit}
-			sx={{
-				backgroundColor: 'secondary.main',
-				borderRadius: '10px',
-				width: { xs: '100%', md: '50%' },
-				color: 'secondary.contrastText',
-			}}
-		>
+		<LoginContainer handleSubmit={handleSubmit}>
 			<Grid
-				container
+				item
+				display={'flex'}
 				flexDirection={'column'}
 				justifyContent={'center'}
 				alignItems={'center'}
-				rowSpacing={2}
-				padding={5}
 			>
-				<Grid
-					item
-					display={'flex'}
-					flexDirection={'column'}
-					justifyContent={'center'}
-					alignItems={'center'}
+				<Logo />
+				<Typography
+					variant={'body1'}
+					color={'#aaa'}
+					sx={{
+						marginBottom: '12px',
+					}}
 				>
-					<Logo />
-					<Typography
-						variant={'body1'}
-						color={'#aaa'}
-						sx={{
-							marginBottom: '12px',
-						}}
-					>
-						Realize o login e aproveite!
-					</Typography>
-				</Grid>
-				<TextInput
-					name="email"
-					label="Seu e-mail"
-					placeholder="john@example.com"
-					type="email"
-					setState={setEmail}
-					state={email}
-					error={!error.valid}
-					helperText={error.helperText}
-				/>
-
-				<TextInput
-					name="password"
-					label="Sua senha"
-					placeholder="**********"
-					type="password"
-					setState={setPassword}
-					state={password}
-				/>
-				<Grid
-					item
-					width={'100%'}
-					display={'flex'}
-					justifyContent={'center'}
-					marginBottom={'18px'}
-				>
-					<Typography
-						variant={'subtitle1'}
-						align={'center'}
-						sx={{ fontSize: '14px' }}
-					>
-						Não possui uma conta?
-						<Link href={'/register'}> Cadastre-se.</Link>
-					</Typography>
-				</Grid>
-				<Grid item width={'100%'}>
-					<FormButton context={'login'} />
-				</Grid>
+					Realize o login e aproveite!
+				</Typography>
 			</Grid>
-		</Box>
+			<SnackBarMessage
+				open={open}
+				handleClose={() => setOpen(false)}
+				mode={'error'}
+				message={message}
+			/>
+			<TextInput
+				name="email"
+				label="Seu e-mail"
+				placeholder="john@example.com"
+				type="email"
+				setState={setEmail}
+				state={email}
+				error={!error.valid}
+				helperText={error.helperText}
+			/>
+
+			<TextInput
+				name="password"
+				label="Sua senha"
+				placeholder="**********"
+				type="password"
+				setState={setPassword}
+				state={password}
+			/>
+			<Grid
+				item
+				width={'100%'}
+				display={'flex'}
+				justifyContent={'center'}
+				marginBottom={'18px'}
+			>
+				<Typography
+					variant={'subtitle1'}
+					align={'center'}
+					sx={{ fontSize: '14px' }}
+				>
+					Não possui uma conta?
+					<Link href={'/register'}> Cadastre-se.</Link>
+				</Typography>
+			</Grid>
+			<Grid item width={'100%'}>
+				<FormButton
+					context={'login'}
+					setOpen={setOpen}
+					isDisabled={!error.valid}
+				/>
+			</Grid>
+		</LoginContainer>
 	);
 };
 
