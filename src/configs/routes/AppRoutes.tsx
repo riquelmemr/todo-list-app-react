@@ -11,11 +11,12 @@ const AppRoutes: React.FC = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
+				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
-				<Route path="/" element={<Home />} />
 				<Route path="/tasks/finished" element={<Finished />} />
 				<Route path="/tasks/deleted" element={<Deleted />} />
+				<Route path="*" element={<Login />} />
 			</Routes>
 		</BrowserRouter>
 	);
