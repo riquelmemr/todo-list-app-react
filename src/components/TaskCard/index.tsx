@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { theme } from '../../configs/themes';
 import { useAppDispatch } from '../../store/hooks';
@@ -19,10 +19,10 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
-	const [open, setOpen] = React.useState(false);
-	const [isUpdate, setIsUpdate] = React.useState(false);
-	const [isDelete, setIsDelete] = React.useState(false);
-	const [isRestore, setIsRestore] = React.useState(false);
+	const [open, setOpen] = useState(false);
+	const [isUpdate, setIsUpdate] = useState(false);
+	const [isDelete, setIsDelete] = useState(false);
+	const [isRestore, setIsRestore] = useState(false);
 
 	const dispath = useAppDispatch();
 
@@ -71,7 +71,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 						padding: '16px',
 					}}
 				>
-					{(task.isDeleted && (
+					{task.isDeleted && (
 						<Box sx={{ display: 'flex', gap: 1 }}>
 							<Button
 								size="small"
@@ -102,7 +102,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 								Excluir
 							</Button>
 						</Box>
-					)) || (
+					)}
+					{!task.completed && (
 						<Box sx={{ display: 'flex', gap: 1 }}>
 							<Button
 								size="small"
@@ -116,6 +117,24 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 							>
 								Editar
 							</Button>
+							<Button
+								size="small"
+								variant="contained"
+								sx={{
+									bgcolor: '#c93f3f',
+									'&:hover': { bgcolor: '#921212' },
+								}}
+								onClick={() => {
+									setOpen(true);
+									setIsDelete(true);
+								}}
+							>
+								Excluir
+							</Button>
+						</Box>
+					)}
+					{task.completed && !task.isDeleted && (
+						<Box sx={{ display: 'flex', gap: 1 }}>
 							<Button
 								size="small"
 								variant="contained"

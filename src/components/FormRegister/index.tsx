@@ -1,5 +1,5 @@
 import { Grid, Link, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
@@ -19,22 +19,22 @@ import SnackBarMessage from '../SnackBarMessage';
 import TextInput from '../TextInput';
 
 const FormRegister: React.FC = () => {
-	const [email, setEmail] = React.useState('');
-	const [password, setPassword] = React.useState('');
-	const [confirmPassword, setConfirmPassword] = React.useState('');
-	const [open, setOpen] = React.useState(false);
-	const [message, setMessage] = React.useState('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+	const [open, setOpen] = useState(false);
+	const [message, setMessage] = useState('');
 
-	const [emailError, setEmailError] = React.useState<LoginError>({
+	const [emailError, setEmailError] = useState<LoginError>({
 		helperText: '',
 		valid: false,
 	});
-	const [passwordError, setPasswordError] = React.useState<LoginError>({
+	const [passwordError, setPasswordError] = useState<LoginError>({
 		helperText: '',
 		valid: false,
 	});
 	const [confirmPasswordError, setConfirmPasswordError] =
-		React.useState<LoginError>({
+		useState<LoginError>({
 			helperText: '',
 			valid: false,
 		});

@@ -21,7 +21,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useAppDispatch } from '../../store/hooks';
 import { removeUserLogged } from '../../store/modules/userLogged/userLoggedSlice';
@@ -133,7 +133,7 @@ interface MiniDrawerProps {
 
 const MiniDrawer: React.FC<MiniDrawerProps> = ({ children, titlePage }) => {
 	const theme = useTheme();
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 	const dispatch = useAppDispatch();
 
 	const handleDrawerOpen = () => {

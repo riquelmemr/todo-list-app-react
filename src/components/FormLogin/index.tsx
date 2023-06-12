@@ -1,5 +1,5 @@
 import { Grid, Link, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -15,11 +15,11 @@ import SnackBarMessage from '../SnackBarMessage';
 import TextInput from '../TextInput';
 
 const FormLogin: React.FC = () => {
-	const [email, setEmail] = React.useState('');
-	const [password, setPassword] = React.useState('');
-	const [open, setOpen] = React.useState(false);
-	const [message, setMessage] = React.useState('');
-	const [error, setError] = React.useState<LoginError>({} as LoginError);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [open, setOpen] = useState(false);
+	const [message, setMessage] = useState('');
+	const [error, setError] = useState<LoginError>({} as LoginError);
 
 	const users = useAppSelector(findAllUsers);
 	const dispatch = useAppDispatch();
@@ -37,7 +37,6 @@ const FormLogin: React.FC = () => {
 		e.preventDefault();
 
 		const { valid, helperText } = loginValidator(email, password);
-		console.log(valid, helperText);
 		let user: User | undefined;
 
 		if (valid) {
@@ -45,13 +44,11 @@ const FormLogin: React.FC = () => {
 
 			if (!user) {
 				setMessage('Usuário não encontrado! Crie uma conta.');
-				console.log(message);
 				return;
 			}
 
 			if (user.password !== password) {
 				setMessage('Senha incorreta. Tente novamente!');
-				console.log(message);
 				return;
 			}
 

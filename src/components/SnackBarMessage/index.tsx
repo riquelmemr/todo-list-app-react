@@ -19,7 +19,10 @@ const SnackBarMessage: React.FC<SnackBarMessageProps> = ({
 			open={open}
 			autoHideDuration={3000}
 			onClose={handleClose}
-			sx={{ position: 'static', width: '100%' }}
+			sx={{
+				position: 'static',
+				width: '100%',
+			}}
 		>
 			<Alert onClose={handleClose} severity={mode} sx={{ width: '100%' }}>
 				{message}

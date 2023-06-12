@@ -18,6 +18,7 @@ import {
 } from '../../store/modules/tasks/tasksSlice';
 import { selectUserLogged } from '../../store/modules/userLogged/userLoggedSlice';
 import Task from '../../types/task';
+import SnackBarMessage from '../SnackBarMessage';
 
 interface ModalProps {
 	task?: Task;
@@ -27,6 +28,8 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
+	const [openSnackBar, setOpenSnackBar] = useState(false);
+	const [message, setMessage] = useState('');
 	const [title, setTitle] = useState(task?.title || '');
 	const [description, setDescription] = useState(task?.description || '');
 
@@ -34,10 +37,14 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 	const userLogged = useAppSelector(selectUserLogged).email;
 
 	const handleSubmit = () => {
-		setOpen(false);
-
 		switch (context) {
 			case 'create':
+				if (!title || !description) {
+					setOpenSnackBar(true);
+					setMessage('Preencha todos os campos');
+					return;
+				}
+
 				dispatch(
 					addTask({
 						id: uuid(),
@@ -52,6 +59,12 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 				break;
 
 			case 'update':
+				if (!title || !description) {
+					setOpenSnackBar(true);
+					setMessage('Preencha todos os campos');
+					return;
+				}
+
 				if (task) {
 					dispatch(
 						updateTask({
@@ -93,7 +106,13 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 						}),
 					);
 				}
+
+				break;
 		}
+
+		setOpen(false);
+		setTitle('');
+		setDescription('');
 	};
 
 	return (
@@ -122,6 +141,12 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 
 				{context !== 'delete' && context !== 'restore' && (
 					<DialogContent>
+						<SnackBarMessage
+							mode="error"
+							open={openSnackBar}
+							handleClose={() => setOpenSnackBar(false)}
+							message={message}
+						/>
 						<Grid container spacing={2}>
 							<Grid item xs={12}>
 								<Box
@@ -203,7 +228,6 @@ const Modal: React.FC<ModalProps> = ({ context, open, setOpen, task }) => {
 					<Button
 						variant="contained"
 						onClick={() => {
-							setOpen(false);
 							handleSubmit();
 						}}
 					>
