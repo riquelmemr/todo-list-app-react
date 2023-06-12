@@ -133,7 +133,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 							</Button>
 						</Box>
 					)}
-					{task.completed && !task.isDeleted && (
+					{task.completed && !task.isDeleted (
 						<Box sx={{ display: 'flex', gap: 1 }}>
 							<Button
 								size="small"
