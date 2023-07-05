@@ -275,7 +275,7 @@ const MiniDrawer: React.FC<MiniDrawerProps> = ({ children, titlePage }) => {
 					flexGrow: 1,
 					p: 3,
 					backgroundColor: theme.palette.secondary.light,
-					height: '100%',
+					height: '100vh',
 				}}
 			>
 				<DrawerHeader />
